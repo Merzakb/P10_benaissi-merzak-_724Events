@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { v4 as uuid } from "uuid"
 import { useData } from "../../contexts/DataContext"
 import { getMonth } from "../../helpers/Date"
 
@@ -8,11 +9,17 @@ const Slider = () => {
     const { data } = useData()
     const [index, setIndex] = useState(0)
     const byDateDesc = data?.focus.sort((evtA, evtB) =>
-        new Date(evtA.date) < new Date(evtB.date) ? -1 : 1,
+        // Pour afficher les events de plus récent au plus ancien, on doit utilisé ">" ou lieu de "<";
+        // Si evtA.date est antérieur à evtB.date, la fonction retourne -1,
+        // indiquant que evtA devrait être placé avant evtB dans le tableau trié.
+        // Sinon, la fonction retourne 1, indiquant que evtB devrait être placé avant evtA.
+        new Date(evtA.date) > new Date(evtB.date) ? -1 : 1,
     )
     const nextCard = () => {
         setTimeout(
-            () => setIndex(index < byDateDesc.length ? index + 1 : 0),
+            // vue que l'index commence à 0, il a fallut ajouté (-1) a byDateDesc.length
+            // pour éviter de se trouver avec un slide blanc de plus
+            () => setIndex(index < (byDateDesc?.length ?? 0) - 1 ? index + 1 : 0),
             5000,
         )
     }
@@ -22,9 +29,9 @@ const Slider = () => {
     return (
         <div className="SlideCardList">
             {byDateDesc?.map((event, idx) => (
-                <>
+                <div key={uuid()}>
                     <div
-                        key={event.title}
+                        key={uuid()}
                         className={`SlideCard SlideCard--${
                             index === idx ? "display" : "hide"
                         }`}
@@ -40,17 +47,23 @@ const Slider = () => {
                     </div>
                     <div className="SlideCard__paginationContainer">
                         <div className="SlideCard__pagination">
-                            {byDateDesc.map((_, radioIdx) => (
+                            {byDateDesc?.map((_, radioIdx) => (
                                 <input
-                                    key={`${event.id}`}
+                                    key={uuid()}
                                     type="radio"
                                     name="radio-button"
-                                    checked={idx === radioIdx}
+                                    // ici on doit utilisé "index" ou lieu de "idx", car
+                                    // le "index" est actualisé selon le state, ce qui permet d'afficher le bouton-radio
+                                    // qui correspond au slide affiché
+                                    checked={index === radioIdx}
+                                    onChange={() =>
+                                        setIndex(byDateDesc.indexOf(event))
+                                    }
                                 />
                             ))}
                         </div>
                     </div>
-                </>
+                </div>
             ))}
         </div>
     )
