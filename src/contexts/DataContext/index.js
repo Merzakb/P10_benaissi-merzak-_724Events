@@ -31,12 +31,27 @@ export const DataProvider = ({ children }) => {
         getData()
     })
 
+    // Calcul de l'événement plus récent grâce à la methode reduce()
+    // qui va parcours tout le tableau des events pour trouver le dernier événement en termes de date
+    // La valeur obetenu on va l'assigner au props qui nétait pas définie jusqu'à présent
+    const lastEvent =
+        data && data.events
+            ? data.events.reduce((acc, event) => {
+                  if (!acc || new Date(event.date) > new Date(acc.date)) {
+                      return event
+                  }
+                  return acc
+              }, null)
+            : null
+
     return (
         <DataContext.Provider
             // eslint-disable-next-line react/jsx-no-constructed-context-values
             value={{
                 data,
                 error,
+                // Ajouter la props "last" avec la valeur de la variable "lastEvent"
+                last: lastEvent
             }}
         >
             {children}
