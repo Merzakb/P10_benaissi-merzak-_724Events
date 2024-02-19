@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { v4 as uuid } from "uuid"
 import EventCard from "../../components/EventCard"
 import Select from "../../components/Select"
 import { useData } from "../../contexts/DataContext"
@@ -13,17 +14,22 @@ const EventList = () => {
     const { data, error } = useData()
     const [type, setType] = useState()
     const [currentPage, setCurrentPage] = useState(1)
-    const filteredEvents = ((!type ? data?.events : data?.events) || []).filter(
-        (event, index) => {
-            if (
-                (currentPage - 1) * PER_PAGE <= index &&
-                PER_PAGE * currentPage > index
-            ) {
-                return true
-            }
-            return false
-        },
-    )
+    const filteredEvents = (
+        // Si type est falsy, inclut tous les événements, sinon filtre les événements par type
+        (!type
+            ? data?.events  // Si type est falsy, tous les événements sont inclus
+            : data?.events.filter((event) => type === event.type) // Sinon, seuls les événements du type spécifié sont inclus
+        ) || [] 
+    ).filter((event, index) => {
+        if (
+            (currentPage - 1) * PER_PAGE <= index &&
+            PER_PAGE * currentPage > index
+        ) {
+            return true
+        }
+        return false
+    })
+    
     const changeType = (evtType) => {
         setCurrentPage(1)
         setType(evtType)
@@ -66,7 +72,7 @@ const EventList = () => {
                         {[...Array(pageNumber || 0)].map((_, n) => (
                             // eslint-disable-next-line react/no-array-index-key
                             <a
-                                key={n}
+                                key={uuid()}
                                 href="#events"
                                 onClick={() => setCurrentPage(n + 1)}
                             >
