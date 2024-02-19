@@ -19,6 +19,8 @@ const Form = ({ onSuccess, onError }) => {
             try {
                 await mockContactApi()
                 setSending(false)
+                // On appelle la fonction onSuccess() si l'envoi passe bien
+                onSuccess()
             } catch (err) {
                 setSending(false)
                 onError(err)
@@ -40,7 +42,11 @@ const Form = ({ onSuccess, onError }) => {
                         titleEmpty
                     />
                     <Field placeholder="" label="Email" />
-                    <Button type={BUTTON_TYPES.SUBMIT} disabled={sending}>
+                    <Button
+                        type={BUTTON_TYPES.SUBMIT}
+                        disabled={sending}
+                        data-testid="button-test-id"
+                    >
                         {sending ? "En cours" : "Envoyer"}
                     </Button>
                 </div>

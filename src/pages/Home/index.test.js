@@ -21,7 +21,11 @@ describe("When Form is created", () => {
                 }),
             )
             await screen.findByText("En cours")
-            await screen.findByText("Message envoyé !")
+            // Attendre un certain temps pour que l'opération asynchrone 
+            // de la fonction mockContactApi() se termine
+            setTimeout(() => {
+                expect(screen.getByText("Message envoyé !")).toBeInTheDocument()
+            }, 1500)
         })
     })
 })

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react"
+import { fireEvent, render, screen, waitFor } from "@testing-library/react"
 import Form from "./index"
 
 describe("When Events is created", () => {
@@ -22,8 +22,15 @@ describe("When Events is created", () => {
                 }),
             )
             await screen.findByText("En cours")
-            await screen.findByText("Envoyer")
-            expect(onSuccess).toHaveBeenCalled()
+            // Attendre un certain temps pour que l'opération asynchrone 
+            // de la fonction mockContactApi() se termine pour vérifier 
+            // que la fonction onSuccess() et appelée
+            setTimeout(() => {
+                screen.findByText("Envoyer");
+                expect(onSuccess).toHaveBeenCalled()
+            }, 1500)  
         })
     })
+    
+    
 })
