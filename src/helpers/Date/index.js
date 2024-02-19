@@ -13,4 +13,8 @@ export const MONTHS = {
     12: "décembre",
 }
 
-export const getMonth = (date) => MONTHS[date.getMonth()]
+// En ajoutant 1 à l'index retourné par date.getMonth(),
+// on pourra obtenir le mois correct correspondant à l'index 1 
+// dans notre objet MONTHS. Cela devrait corriger l'affichage 
+// incorrect des mois dans les composants concernés. 
+export const getMonth = (date) => MONTHS[date.getMonth() + 1]
