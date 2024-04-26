@@ -1,6 +1,6 @@
 {
     "name": "P10_benaissi-merzak-_724Events",
-    "homepage": "P10_benaissi-merzak-_724Events",
+    "homepage": "https://merzakb.github.io/P10_benaissi-merzak-_724Events/",
     "version": "0.1.0",
     "private": true,
     "dependencies": {
@@ -23,7 +23,7 @@
     "test": "react-scripts test",
     "lint": "eslint .eslintrc.js ./src",
     "format": "prettier ./src --write",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -b main -d build"
   },
   "eslintConfig": {
     "extends": [
